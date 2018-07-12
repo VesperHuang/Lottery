@@ -5,7 +5,7 @@ Spyder Editor
 This is a temporary script file.
 """
 import pandas as pd
-import sqlite3
+import common as com
 
 #取得網頁上的表格
 tables = pd.read_html("http://www.taiwanlottery.com.tw/lotto/Lotto1224/history.aspx")
@@ -40,15 +40,7 @@ for i in range(2,len(tables)):
     temp += "where not exists (select volume from Two_Win where volume = '"+ volume +"')"
     sql.append(temp) 
 
-#將資料寫入 sqllite 中
-conn = sqlite3.connect('lottery.db') #建立資料庫連線
-cursor = conn.cursor() #建立 cursor 物件
-
-for k in range(0,len(sql)):
-    cursor.execute(sql[k])  
-  
-conn.commit()#主動更新
-conn.close()#關閉資料庫連線
+com.ExeSqls(sql)
 
 
 

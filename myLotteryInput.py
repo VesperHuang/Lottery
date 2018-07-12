@@ -5,7 +5,7 @@ Created on Tue Jul  3 11:26:25 2018
 @author: Vepser
 """
 import tkinter as tk
-import sqlite3
+import common as com
 
 def click1():
     btnSave.config(state="disabled")
@@ -31,16 +31,9 @@ def click1():
                 sql += " "
             else:
                 sql +=","          
-    ExeSql(sql)
+    com.ExeSql(sql)
     btnSave.config(state="active")      
- 
-def ExeSql(vSql):
-    conn = sqlite3.connect('lottery.db') #建立資料庫連線
-    cursor = conn.cursor() #建立 cursor 物件
-    cursor.execute(vSql)  
-    conn.commit()#主動更新
-    conn.close()#關閉資料庫連線
-    
+     
 win = tk.Tk()
 win.geometry("300x220")
 win.title("我的樂透號碼－輸入")

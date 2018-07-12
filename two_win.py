@@ -5,8 +5,8 @@ Spyder Editor
 This is a temporary script file.
 """
 import requests
-import sqlite3
 from bs4 import BeautifulSoup
+import common as com
 
 #雙贏彩資料字典
 two_win = {"volume":"","date":"","no1":0,"no2":0,"no3":0,"no4":0,"no5":0,"no6":0,
@@ -48,36 +48,28 @@ for n in range(12,len(data3)):
     two_win["no" + str(n-11)] = data3[n].text
 #    print(data3[n].text,end="  ")
 
-
 #將資料寫入 sqllite 中
-conn = sqlite3.connect('lottery.db') #建立資料庫連線
-cursor = conn.cursor() #建立 cursor 物件
+sql = ""
+sql = "insert into Two_Win(volume,date,no1,no2,no3,no4,no5,no6,no7,no8,no9,no10,no11,no12) "
+sql +="select "
+sql +="\"" + two_win["volume"] +"\","
+sql +="\"" + two_win["date"] +"\","
+sql += two_win["no1"] +","
+sql += two_win["no2"] +","
+sql += two_win["no3"] +","
+sql += two_win["no4"] +","
+sql += two_win["no5"] +","
+sql += two_win["no6"] +","
+sql += two_win["no7"] +","
+sql += two_win["no8"] +","
+sql += two_win["no9"] +","
+sql += two_win["no10"] +","
+sql += two_win["no11"] +","    
+sql += two_win["no12"] +" "
+sql += "where not exists (select volume from Two_Win where volume = '"+ two_win["volume"] +"')"
+com.ExeSql(sql)
 
-#判斷是否數據庫已有該表資料 沒有才新增
-sql = "select * from Two_Win where volume ='" + two_win["volume"] + "'"
-cursor = conn.execute(sql)
 
-if(cursor.fetchone() == None):
-    #資料新增
-    sql = "insert into Two_Win values("
-    sql +="\"" + two_win["volume"] +"\","
-    sql +="\"" + two_win["date"] +"\","
-    sql += two_win["no1"] +","
-    sql += two_win["no2"] +","
-    sql += two_win["no3"] +","
-    sql += two_win["no4"] +","
-    sql += two_win["no5"] +","
-    sql += two_win["no6"] +","
-    sql += two_win["no7"] +","
-    sql += two_win["no8"] +","
-    sql += two_win["no9"] +","
-    sql += two_win["no10"] +","
-    sql += two_win["no11"] +","    
-    sql += two_win["no12"] +")"
-    cursor.execute(sql)
-    
-conn.commit()#主動更新
-conn.close()#關閉資料庫連線
 
 
 
